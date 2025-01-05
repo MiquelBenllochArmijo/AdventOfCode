@@ -1,0 +1,36 @@
+Justificación de la técnica de Divide y Vencerás:
+
+- La técnica de divide y vencerás es útil para este problema porque el cálculo 
+de la distancia total entre las listas requiere comparar las posiciones relativas 
+de los elementos en dos listas ordenadas. Ordenar las listas antes de calcular las 
+distancias permite emparejar eficientemente los elementos de menor a mayor, minimizando 
+el costo computacional del emparejamiento.
+
+
+Descripción técnica del proceso de resolución
+
+-Entrada de datos:
+
+    El programa lee dos listas de enteros desde un archivo llamado "day1_puzzle". Cada línea del archivo contiene dos números: uno para la lista izquierda y otro para la lista derecha.
+
+-Preparación inicial:
+
+    Los números leídos se almacenan en dos vectores (left_side y right_side).
+
+-Ordenamiento de las listas:
+
+    Para emparejar correctamente los números de las dos listas de menor a mayor, se utiliza el algoritmo de mergesort:
+    El vector se divide recursivamente en mitades hasta que cada subvector tiene un solo elemento.
+    Luego, las mitades se fusionan de forma ordenada.
+    Este proceso se repite hasta que todo el vector esté ordenado.
+
+-Cálculo de la distancia total:
+
+    Tras ordenar ambos vectores, se emparejan los elementos correspondientes según sus posiciones.
+    Para cada par, se calcula la distancia absoluta ∣left[i]−right[i]∣.
+    Las distancias se acumulan en una variable llamada distance.
+
+-Salida del resultado:
+
+    Finalmente, el programa imprime el valor total de la distancia acumulada, que representa la discrepancia
+    total entre las dos listas.
