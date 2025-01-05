@@ -1,36 +1,51 @@
-Justificación de la técnica de Divide y Vencerás:
+Justificación de la Técnica de Divide y Vencerás
+La técnica de divide y vencerás es particularmente adecuada para este problema porque reduce significativamente la complejidad computacional de ordenar y procesar grandes conjuntos de datos. En este caso, se utiliza para ordenar la lista left_side eficientemente mediante el algoritmo merge sort, que tiene una complejidad de 
+𝑂
+(
+𝑛
+log
+⁡
+𝑛
+)
+O(nlogn). Este ordenamiento es crucial porque:
 
-- La técnica de divide y vencerás es útil para este problema porque el cálculo 
-de la distancia total entre las listas requiere comparar las posiciones relativas 
-de los elementos en dos listas ordenadas. Ordenar las listas antes de calcular las 
-distancias permite emparejar eficientemente los elementos de menor a mayor, minimizando 
-el costo computacional del emparejamiento.
+Emparejamiento Eficiente: Al ordenar los elementos, se facilita la comparación directa de los números de ambas listas de menor a mayor.
+Reducción de Costo Computacional: Permite calcular eficientemente las métricas requeridas (como la similitud ponderada) al evitar operaciones innecesarias.
+Ordenar las listas antes de calcular las distancias o frecuencias no solo mejora la eficiencia, sino que también asegura que el proceso sea escalable para grandes cantidades de datos.
 
+Descripción Técnica del Proceso de Resolución
+Entrada de Datos
+El programa lee dos listas de enteros desde un archivo llamado "day1_puzzle".
+Cada línea del archivo contiene dos números: uno que se almacena en la lista left_side y otro en right_side.
+Preparación Inicial
+Almacenamiento de Datos: Los números leídos se colocan en dos vectores separados: left_side y right_side.
+Estructuras Auxiliares:
+Se utiliza un mapa hash (unordered_map) para almacenar las frecuencias de los números en la lista izquierda.
+Cada clave en el mapa representa un número, y su valor es una estructura recurrent que contiene:
+number_of_times_left_side: Número de ocurrencias en left_side.
+number_of_times_right_side: Número de ocurrencias en right_side.
+Ordenamiento de las Listas
+El algoritmo de merge sort es implementado para ordenar left_side:
 
-Descripción técnica del proceso de resolución
+División Recursiva: El vector se divide en mitades hasta que cada subvector contiene un único elemento.
+Fusión Ordenada: Las mitades se combinan en orden ascendente utilizando un paso de fusión eficiente.
+Complejidad: El algoritmo garantiza una eficiencia de 
 
--Entrada de datos:
+O(nlogn).
+Cálculo de la Similitud Ponderada
+Frecuencias de Números:
+Cada número de left_side se registra en el mapa con su frecuencia.
+Luego, para cada número de right_side, si está presente en el mapa, se incrementa el contador correspondiente (number_of_times_right_side).
+Fórmula de Similitud:
+Para cada número presente en ambas listas, se multiplica su frecuencia en la izquierda, su frecuencia en la derecha y su valor numérico.
+La suma de estos productos da la similitud ponderada total.
+Cálculo de la Distancia Total (Parte 2)
+Además de la similitud ponderada, se incorpora el cálculo de la distancia total entre las listas:
 
-    El programa lee dos listas de enteros desde un archivo llamado "day1_puzzle". Cada línea del archivo contiene dos números: uno para la lista izquierda y otro para la lista derecha.
+Emparejamiento Ordenado:
+Tras ordenar las listas, se emparejan los elementos correspondientes por posición.
+La distancia entre cada par se calcula como la diferencia absoluta: 
 
--Preparación inicial:
-
-    Los números leídos se almacenan en dos vectores (left_side y right_side).
-
--Ordenamiento de las listas:
-
-    Para emparejar correctamente los números de las dos listas de menor a mayor, se utiliza el algoritmo de mergesort:
-    El vector se divide recursivamente en mitades hasta que cada subvector tiene un solo elemento.
-    Luego, las mitades se fusionan de forma ordenada.
-    Este proceso se repite hasta que todo el vector esté ordenado.
-
--Cálculo de la distancia total:
-
-    Tras ordenar ambos vectores, se emparejan los elementos correspondientes según sus posiciones.
-    Para cada par, se calcula la distancia absoluta ∣left[i]−right[i]∣.
-    Las distancias se acumulan en una variable llamada distance.
-
--Salida del resultado:
-
-    Finalmente, el programa imprime el valor total de la distancia acumulada, que representa la discrepancia
-    total entre las dos listas.
+∣left[i]−right[i]∣.
+Acumulación:
+Estas distancias se suman para obtener la discrepancia total entre las listas.
