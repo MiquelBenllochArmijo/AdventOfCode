@@ -5,15 +5,16 @@
 #include <string>
 #include <unordered_map>
 #include <limits>
+using namespace std;
 
 // Función para fusionar dos subarreglos en orden
-void merge(std::vector<int>& array, int ini, int fin) {
+void merge(vector<int>& array, int ini, int fin) {
     int medio = ini + (fin - ini) / 2; // Punto medio del subarreglo
     int n1 = medio - ini + 1;         // Tamaño del subarreglo izquierdo
     int n2 = fin - medio;             // Tamaño del subarreglo derecho
 
     // Crear subarreglos temporales
-    std::vector<int> left(n1), right(n2);
+    vector<int> left(n1), right(n2);
 
     // Copiar datos en los subarreglos
     for (int i = 0; i < n1; i++) {
@@ -52,7 +53,7 @@ void merge(std::vector<int>& array, int ini, int fin) {
 }
 
 // Función recursiva para implementar el algoritmo mergesort
-void mergesort(std::vector<int>& array, int ini, int fin) {
+void mergesort(vector<int>& array, int ini, int fin) {
     if (ini < fin) {
         int medio = ini + (fin - ini) / 2; // Calcular el punto medio
         mergesort(array, ini, medio);     // Ordenar la mitad izquierda
@@ -63,21 +64,21 @@ void mergesort(std::vector<int>& array, int ini, int fin) {
 
 int main() {
     // Abrir el archivo de entrada
-    std::ifstream file("day1_puzzle");
+    ifstream file("day1_puzzle");
     if (!file) {
-        std::cerr << "Error opening the file!" << std::endl;
+        cerr << "Error opening the file!" << endl;
         return 1;
     }
 
     // Vectores para almacenar las dos listas
-    std::vector<int> left_side;
-    std::vector<int> right_side;
+    vector<int> left_side;
+    vector<int> right_side;
 
     // Leer el archivo línea por línea
-    std::string line;
+    string line;
     int number1, number2;
-    while (std::getline(file, line)) {
-        std::istringstream iss(line);
+    while (getline(file, line)) {
+        istringstream iss(line);
         if (iss >> number1 >> number2) {
             left_side.push_back(number1);
             right_side.push_back(number2);
@@ -95,7 +96,7 @@ int main() {
     }
 
     // Mostrar el resultado
-    std::cout << "Total distance: " << distance << std::endl;
+    cout << "Total distance: " << distance << std::endl;
 
     return 0;
 }
