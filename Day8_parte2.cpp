@@ -62,7 +62,7 @@ void create_anthinodes(std::unordered_map<char,std::vector<Coordinate>>& positio
 }
 
 int main() {
-    std::ifstream file("day8_puzzle");
+    std::ifstream file("day8_puzzle.txt");
     if (!file) {
         std::cerr << "Error opening the file!" << std::endl;
         return 1;
