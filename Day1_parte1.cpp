@@ -64,7 +64,7 @@ void mergesort(vector<int>& array, int ini, int fin) {
 
 int main() {
     // Abrir el archivo de entrada
-    ifstream file("day1_puzzle");
+    ifstream file("day1_puzzle.txt");
     if (!file) {
         cerr << "Error opening the file!" << endl;
         return 1;
