@@ -60,7 +60,7 @@ int check_safeness_of_reports(const std::vector<std::vector<int>>& reports) {
 }
 
 int main() {
-    std::ifstream file("day2_puzzle");
+    std::ifstream file("day2_puzzle.txt");
     if (!file) {
         std::cerr << "Error opening the file!" << std::endl;
         return 1;
