@@ -52,7 +52,7 @@ void mergesort(std::vector<int>& array,int ini, int fin){
    }  
 }
 int main(){
-    std::ifstream file("day1_puzzle");
+    std::ifstream file("day1_puzzle.txt");
     if(!file){
         std::cerr << "Error opening the file!"<<std::endl;
         return 1;
