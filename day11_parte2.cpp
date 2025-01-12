@@ -12,7 +12,7 @@ constexpr int MAX_LEVEL = 75;
 
 // Estructura que representa un nodo en el árbol
 struct Node {
-    long long value; // "Engraving" en el código original
+    long long engraving; // Cambiado de "value" a "engraving"
     Node* left;
     Node* right; 
 };
@@ -21,9 +21,9 @@ struct Node {
 std::queue<std::pair<Node*, int>> node_queue;
 
 // Función para procesar los nodos y generar nuevos nodos según las reglas
-void processNodes(std::vector<std::unique_ptr<Node>>& nodes, std::unordered_map<long long, Node*>& seen_nodes) {
+void generate_nodes(std::vector<std::unique_ptr<Node>>& nodes, std::unordered_map<long long, Node*>& seen_nodes) {
     while (!node_queue.empty()) {
-        auto [current_node, level] = node_queue.front();
+        auto [node, level] = node_queue.front();
         node_queue.pop();
 
         // Si se alcanza el nivel máximo, no procesar más
@@ -31,90 +31,88 @@ void processNodes(std::vector<std::unique_ptr<Node>>& nodes, std::unordered_map<
 
         // Contar la cantidad de dígitos en el valor del nodo
         int num_digits = 0;
-        long long temp_value = current_node->value;
-        while (temp_value > 0) {
+        long long engraving = node->engraving;
+        while (engraving > 0) {
             num_digits++;
-            temp_value /= 10;
+            engraving /= 10;
         }
 
         // Si el valor es 0, crear un nuevo nodo con valor 1
-        if (current_node->value == 0) {
+        if (node->engraving == 0) {
             auto new_node = std::make_unique<Node>();
-            new_node->value = 1;
+            new_node->engraving = 1;
 
-            if (seen_nodes.find(new_node->value) == seen_nodes.end()) {
+            if (seen_nodes.find(new_node->engraving) == seen_nodes.end()) {
                 nodes.push_back(std::move(new_node));
-                current_node->left = nodes.back().get();
-                seen_nodes[nodes.back()->value] = nodes.back().get();
+                node->left = nodes.back().get();
+                seen_nodes[nodes.back()->engraving] = nodes.back().get();
                 node_queue.push({nodes.back().get(), level + 1});
             } else {
-                current_node->left = seen_nodes[new_node->value];
+                node->left = seen_nodes[new_node->engraving];
             }
         } 
         // Si el número de dígitos es par, dividir el valor en dos partes
         else if (num_digits % 2 == 0) {
             // Crear nodo para la parte izquierda (dígitos más significativos)
             auto left_node = std::make_unique<Node>();
-            left_node->value = current_node->value / static_cast<long long>(std::pow(10, num_digits / 2));
+            left_node->engraving = node->engraving / static_cast<long long>(std::pow(10, num_digits / 2));
 
-            if (seen_nodes.find(left_node->value) == seen_nodes.end()) {
+            if (seen_nodes.find(left_node->engraving) == seen_nodes.end()) {
                 nodes.push_back(std::move(left_node));
-                current_node->left = nodes.back().get();
-                seen_nodes[nodes.back()->value] = nodes.back().get();
+                node->left = nodes.back().get();
+                seen_nodes[nodes.back()->engraving] = nodes.back().get();
                 node_queue.push({nodes.back().get(), level + 1});
             } else {
-                current_node->left = seen_nodes[left_node->value];
+                node->left = seen_nodes[left_node->engraving];
             }
 
             // Crear nodo para la parte derecha (dígitos menos significativos)
             auto right_node = std::make_unique<Node>();
-            right_node->value = current_node->value % static_cast<long long>(std::pow(10, num_digits / 2));
+            right_node->engraving = node->engraving % static_cast<long long>(std::pow(10, num_digits / 2));
 
-            if (seen_nodes.find(right_node->value) == seen_nodes.end()) {
+            if (seen_nodes.find(right_node->engraving) == seen_nodes.end()) {
                 nodes.push_back(std::move(right_node));
-                current_node->right = nodes.back().get();
-                seen_nodes[nodes.back()->value] = nodes.back().get();
+                node->right = nodes.back().get();
+                seen_nodes[nodes.back()->engraving] = nodes.back().get();
                 node_queue.push({nodes.back().get(), level + 1});
             } else {
-                current_node->right = seen_nodes[right_node->value];
+                node->right = seen_nodes[right_node->engraving];
             }
         } 
         // Si el número de dígitos es impar, multiplicar por 2024
         else {
             auto new_node = std::make_unique<Node>();
-            new_node->value = current_node->value * 2024;
+            new_node->engraving = node->engraving * 2024;
 
-            if (seen_nodes.find(new_node->value) == seen_nodes.end()) {
+            if (seen_nodes.find(new_node->engraving) == seen_nodes.end()) {
                 nodes.push_back(std::move(new_node));
-                current_node->left = nodes.back().get();
-                seen_nodes[nodes.back()->value] = nodes.back().get();
+                node->left = nodes.back().get();
+                seen_nodes[nodes.back()->engraving] = nodes.back().get();
                 node_queue.push({nodes.back().get(), level + 1});
             } else {
-                current_node->left = seen_nodes[new_node->value];
+                node->left = seen_nodes[new_node->engraving];
             }
         }
     }
 }
 
 // Memoria para memoización de los cálculos
-std::unordered_map<long long, std::unordered_map<long long, long long>> memoization;
+std::unordered_map<long long, std::unordered_map<int, long long>> memo;
 
 // Función recursiva para contar los caminos en el árbol
-long long countPaths(Node* node, int level) {
+long long count_nodes(Node* node, int level) {
     if (level == MAX_LEVEL) return 1; // Base: se alcanzó el nivel máximo
 
     // Si ya está memorizado, devolver el resultado almacenado
-    if (memoization[node->value].count(level)) 
-        return memoization[node->value][level];
+    if (memo[node->engraving][level] != 0) 
+        return memo[node->engraving][level];
 
-    if (!node->left && !node->right) return 1; // Nodo hoja
+    long long total = 0;
+    if (node->left) total += count_nodes(node->left, level + 1);
+    if (node->right) total += count_nodes(node->right, level + 1);
 
-    long long path_count = 0;
-    if (node->left) path_count += countPaths(node->left, level + 1);
-    if (node->right) path_count += countPaths(node->right, level + 1);
-
-    memoization[node->value][level] = path_count;
-    return path_count;
+    memo[node->engraving][level] = total;
+    return total;
 }
 
 int main(int argc, char* argv[]) {
@@ -128,40 +126,40 @@ int main(int argc, char* argv[]) {
     std::string line;
 
     while (std::getline(file, line)) {
-        std::vector<std::unique_ptr<Node>> initial_nodes;
+        std::vector<std::unique_ptr<Node>> nodes;
         size_t current_pos = 0;
         size_t next_space = line.find(' ');
 
         // Crear nodos iniciales a partir de los números en la línea
         while (next_space != std::string::npos) {
             auto new_node = std::make_unique<Node>();
-            new_node->value = std::stoll(line.substr(current_pos, next_space - current_pos));
-            initial_nodes.push_back(std::move(new_node));
+            new_node->engraving = std::stoll(line.substr(current_pos, next_space - current_pos));
+            nodes.push_back(std::move(new_node));
             current_pos = next_space + 1;
             next_space = line.find(' ', current_pos);
         }
 
         auto last_node = std::make_unique<Node>();
-        last_node->value = std::stoll(line.substr(current_pos));
-        initial_nodes.push_back(std::move(last_node));
+        last_node->engraving = std::stoll(line.substr(current_pos));
+        nodes.push_back(std::move(last_node));
 
-        long long total_paths = 0;
+        long long total_nodes = 0;
 
         // Procesar cada nodo inicial
-        for (auto& node : initial_nodes) {
+        for (auto& node : nodes) {
             std::vector<std::unique_ptr<Node>> tree_nodes;
             tree_nodes.push_back(std::move(node));
 
             std::unordered_map<long long, Node*> seen_nodes;
             node_queue = {};
             node_queue.push({tree_nodes.back().get(), 0});
-            seen_nodes[tree_nodes.back()->value] = tree_nodes.back().get();
+            seen_nodes[tree_nodes.back()->engraving] = tree_nodes.back().get();
 
-            processNodes(tree_nodes, seen_nodes);
-            total_paths += countPaths(tree_nodes[0].get(), 0);
+            generate_nodes(tree_nodes, seen_nodes);
+            total_nodes += count_nodes(tree_nodes[0].get(), 0);
         }
 
-        std::cout << total_paths << '\n';
+        std::cout << total_nodes << '\n';
     }
 
     return 0;
